@@ -1,13 +1,8 @@
 # Mini Notion Clone
 
-## GitLab Repository (Private - Wajib)
-
-Project ini dibuat dan dikelola di **GitLab** dengan repository **private**.  
-Backend terdapat di folder `backend/` dan frontend di folder `frontend/`.
-
 ---
 
-## 🚀 Cara Menjalankan Project
+## Cara Menjalankan Project
 
 ### Prasyarat
 - Node.js (v18 atau lebih baru)

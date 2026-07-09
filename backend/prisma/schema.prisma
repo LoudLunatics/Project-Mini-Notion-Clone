@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String   // Menyimpan password yang sudah di-hash (bcrypt)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  notes      Note[]
+  edited_notes Note[] @relation("LastEditedBy")
+}
+
+model Note {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  title      String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  last_edited_by_id Int?
+  
+  // Relasi: Setiap catatan dimiliki oleh satu User
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  blocks     Block[]
+  LastEditedBy User? @relation("LastEditedBy", fields: [last_edited_by_id], references: [id])
+}
+
+model Block {
+  id          Int      @id @default(autoincrement())
+  note_id     Int
+  parent_id   Int?     // Mengizinkan nested block (NULL jika ini adalah blok utama)
+  type        String   // Tipe blok, misalnya "text", "image", "checklist"
+  content     String   @db.Text // @db.Text digunakan agar bisa menampung teks panjang
+  order_index Int      // Indeks urutan untuk fitur drag & drop
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  
+  // Relasi: Setiap blok berada di dalam satu Note
+  note        Note     @relation(fields: [note_id], references: [id], onDelete: Cascade)
+}
